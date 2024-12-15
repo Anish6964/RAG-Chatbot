@@ -51,9 +51,15 @@ def build_chain():
             return input_str.encode("utf-8")
 
         def transform_output(self, output: bytes) -> str:
-            response_json = json.loads(output.read().decode("utf-8"))
-            print(response_json)
-            return response_json[0]["generated_text"]
+          response_json = json.loads(output.read().decode("utf-8"))
+          print("Full Response from SageMaker:", response_json)  # Debugging
+
+          # Handle response as a dictionary
+          if isinstance(response_json, dict) and "generated_text" in response_json:
+              return response_json["generated_text"]
+          else:
+              return "Unexpected response format: " + str(response_json)
+
 
     content_handler = ContentHandler()
 
